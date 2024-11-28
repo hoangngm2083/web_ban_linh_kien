@@ -1,11 +1,18 @@
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+
 import React, { Suspense } from "react";
 
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import DefaultLayout from "./layouts/DefaultLayout";
-import routes from "./routes/index";
+import publicRoutes from "./routes/index";
 
 function App() {
+  const routes = Object.values(publicRoutes);
+  console.log(routes);
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>

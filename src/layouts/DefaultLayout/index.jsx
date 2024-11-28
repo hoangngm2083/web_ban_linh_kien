@@ -1,6 +1,6 @@
-import React from "react";
-import Footer from "../Components/Footer";
-import Header from "../Components/Header";
+import React, { lazy } from "react";
+const Header = lazy(() => import("../Components/Header"));
+const Footer = lazy(() => import("../Components/Footer"));
 
 const DefaultLayout = ({ noFooter, children }) => {
   return (

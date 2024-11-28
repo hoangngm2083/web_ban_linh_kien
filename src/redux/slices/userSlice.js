@@ -3,7 +3,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Khởi tạo trạng thái ban đầu
 const initialState = {
-  userId: null, // userId ban đầu là null
+  id: null, // userId ban đầu là null
+  email: "",
+  accessToken: "",
 };
 
 // Tạo slice cho user
@@ -13,11 +15,15 @@ const userSlice = createSlice({
   reducers: {
     // Action để đăng nhập, lưu userId
     login: (state, action) => {
-      state.userId = action.payload;
+      state.id = action.payload?.id;
+      state.email = action.payload?.email;
+      state.accessToken = action.payload?.accessToken;
     },
     // Action để đăng xuất, đặt userId về null
     logout: (state) => {
-      state.userId = null;
+      state.id = null;
+      state.email = "";
+      state.accessToken = "";
     },
   },
 });
@@ -25,7 +31,7 @@ const userSlice = createSlice({
 // Xuất ra các action và reducer
 export const { login, logout } = userSlice.actions;
 
-export const selectUserId = (state) => state.user.userId; // selector lấy userId
-export const isLogged = (state) => state.user.userId !== null; // Kiểm tra đăng nhập
+export const selectUserId = (state) => state.user.id; // selector lấy userId
+export const isLogged = (state) => state.user.id !== null; // Kiểm tra đăng nhập
 
 export default userSlice.reducer;

@@ -1,24 +1,30 @@
 import React from "react";
 
-const Home = React.lazy(() => import("../pages/Home"));
-const Login = React.lazy(() => import("../pages/Login"));
-const NotFound = React.lazy(() => import("../pages/NotFound"));
+const Home = React.lazy(() => import("../pages/site/Home"));
+const Login = React.lazy(() => import("../pages/account/Login"));
+const Register = React.lazy(() => import("../pages/account/Register"));
+const NotFound = React.lazy(() => import("../pages/utils/NotFound"));
 
-const publicRoutes = [
-  {
+const publicRoutes = {
+  home: {
     path: "/",
     element: Home,
   },
-  {
-    path: "/login",
+
+  login: {
+    path: "/account/login",
     element: Login,
   },
-  {
+  register: {
+    path: "/account/register",
+    element: Register,
+  },
+  notFound: {
     path: "*",
     element: NotFound,
     noFooter: true,
   },
-];
+};
 
 export const privateRoutes = {};
 
