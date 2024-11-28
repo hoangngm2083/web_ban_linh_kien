@@ -19,6 +19,7 @@ const userSlice = createSlice({
       state.email = action.payload?.email;
       state.accessToken = action.payload?.accessToken;
     },
+
     // Action để đăng xuất, đặt userId về null
     logout: (state) => {
       state.id = null;

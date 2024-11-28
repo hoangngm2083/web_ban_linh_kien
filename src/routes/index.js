@@ -19,6 +19,18 @@ const publicRoutes = {
     path: "/account/register",
     element: Register,
   },
+  blog: {
+    path: "/blogs",
+    element: Register,
+  },
+  introduce: {
+    path: "/introduce",
+    element: Register,
+  },
+  contact: {
+    path: "/contact",
+    element: Register,
+  },
   notFound: {
     path: "*",
     element: NotFound,
