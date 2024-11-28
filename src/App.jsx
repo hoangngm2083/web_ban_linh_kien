@@ -11,7 +11,6 @@ import publicRoutes from "./routes/index";
 
 function App() {
   const routes = Object.values(publicRoutes);
-  console.log(routes);
 
   return (
     <BrowserRouter>

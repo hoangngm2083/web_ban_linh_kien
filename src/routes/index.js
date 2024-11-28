@@ -1,5 +1,8 @@
 import React from "react";
 
+const ProductDetail = React.lazy(
+  () => import("../pages/product/ProductDetail")
+);
 const Home = React.lazy(() => import("../pages/site/Home"));
 const Login = React.lazy(() => import("../pages/account/Login"));
 const Register = React.lazy(() => import("../pages/account/Register"));
@@ -12,11 +15,11 @@ const publicRoutes = {
   },
 
   login: {
-    path: "/account/login",
+    path: "/accounts/login",
     element: Login,
   },
   register: {
-    path: "/account/register",
+    path: "/accounts/register",
     element: Register,
   },
   blog: {
@@ -24,12 +27,17 @@ const publicRoutes = {
     element: Register,
   },
   introduce: {
-    path: "/introduce",
+    path: "/introduces",
     element: Register,
   },
   contact: {
-    path: "/contact",
+    path: "/contacts",
     element: Register,
+  },
+
+  productDetail: {
+    path: "/products/:id",
+    element: ProductDetail,
   },
   notFound: {
     path: "*",
