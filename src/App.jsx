@@ -7,6 +7,7 @@ import React, { Suspense } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import DefaultLayout from "./layouts/DefaultLayout";
+import Loading from "./pages/utils/Loading";
 import publicRoutes from "./routes/index";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<Loading />}>
         <Routes>
           {routes.map((route, index) => {
             const Page = route.element;
