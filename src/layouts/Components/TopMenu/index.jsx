@@ -73,6 +73,16 @@ const TopMenu = () => {
                 Contacts
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/products/1">
+                Product 1
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/products/2">
+                Product 2
+              </Link>
+            </li>
           </ul>
         </div>
       </div>

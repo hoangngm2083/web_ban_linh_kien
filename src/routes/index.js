@@ -3,7 +3,9 @@ import React from "react";
 const ProductDetail = React.lazy(
   () => import("../pages/product/ProductDetail")
 );
+const Checkout = React.lazy(() => import("../pages/checkout"));
 const Home = React.lazy(() => import("../pages/site/Home"));
+const Cart = React.lazy(() => import("../pages/cart"));
 const Login = React.lazy(() => import("../pages/account/Login"));
 const Register = React.lazy(() => import("../pages/account/Register"));
 const NotFound = React.lazy(() => import("../pages/utils/NotFound"));
@@ -15,11 +17,11 @@ const publicRoutes = {
   },
 
   login: {
-    path: "/accounts/login",
+    path: "/auth/login",
     element: Login,
   },
   register: {
-    path: "/accounts/register",
+    path: "/auth/register",
     element: Register,
   },
   blog: {
@@ -33,6 +35,14 @@ const publicRoutes = {
   contact: {
     path: "/contacts",
     element: Register,
+  },
+  cart: {
+    path: "/cart",
+    element: Cart,
+  },
+  checkout: {
+    path: "/checkout",
+    element: Checkout,
   },
 
   productDetail: {

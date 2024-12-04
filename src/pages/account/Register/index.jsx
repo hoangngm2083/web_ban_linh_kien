@@ -1,19 +1,11 @@
 import { lazy } from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import authServices from "../../../services/auth.services";
 const RegisterForm = lazy(() => import("./forms/RegisterForm"));
 
 const Register = () => {
-  const navigate = useNavigate();
-
-  const dispatch = useDispatch();
-
   const handleRegister = () => {
-    // Giả sử userId được nhập từ người dùng
-
-    dispatch(login(userId)); // Lưu userId vào Redux store
-
-    navigate("/");
+    authServices.register(data);
   };
 
   return (

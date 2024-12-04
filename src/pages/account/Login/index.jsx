@@ -1,17 +1,13 @@
 // src/components/Login.js
 import React from "react";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import { loginService } from "../../../services/account.services";
+import { Link } from "react-router-dom";
+import useAuth from "../../../services/auth.services";
 import LoginForm from "./forms/LoginForm";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
+  const { login } = useAuth();
   const handleLogin = (data) => {
-    loginService(data, dispatch);
-    navigate("/");
+    login(data);
   };
 
   return (

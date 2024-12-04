@@ -5,6 +5,11 @@ export default axios.create({
 });
 
 export const apiPath = {
-  login: "account/login",
-  login: "account/register",
+  account: {
+    login: "account/login",
+    login: "account/register",
+  },
+  product: {
+    get: "products/",
+  },
 };
