@@ -24,7 +24,10 @@ function App() {
                 key={index}
                 path={route.path}
                 element={
-                  <DefaultLayout noFooter={route?.noFooter || false}>
+                  <DefaultLayout
+                    noFooter={route?.noFooter}
+                    noNavbar={!route?.noNavbar}
+                  >
                     <Page />
                   </DefaultLayout>
                 }

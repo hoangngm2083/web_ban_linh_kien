@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import api from "../../../api";
+import { Col, Container, Row } from "react-bootstrap";
 import Banner from "../../../components/Banner";
+import ProductCard from "../../../components/ProductCard";
+import useProductServices from "../../../services/product.services";
 const Home = () => {
-  const [value, setValue] = useState("");
-
   const data = [
     {
       to: "/link",
@@ -18,23 +18,45 @@ const Home = () => {
       description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     },
   ];
+  const { getProducts } = useProductServices();
+  const [products, setProducts] = useState(null);
 
   //useEffect
   useEffect(() => {
-    (async () =>
-      await api
-        .get("todos/1")
-        .then((res) => {
-          setValue(JSON.stringify(res.data));
-        })
-        .catch((error) => console.log(error)))();
-  }, []);
+    (async () => {
+      const ps = await getProducts(1);
+      setProducts(ps);
+    })();
+  }, [products]);
+
+  const onAddToCart = () => {};
 
   return (
     <>
-      <Banner id="carouselHomeBanner" data={data} />
-      <h1> Home Page</h1>
-      <p>{value}</p>
+      <div className="row mb-4">
+        <Banner id="carouselHomeBanner" data={data} />
+      </div>
+      <div className="row">
+        <Container fluid>
+          <Row>
+            {products?.map((product) => (
+              <Col
+                key={product.id}
+                xs={12}
+                sm={6}
+                md={4}
+                lg={3}
+                className="mb-4 p-1"
+                style={{
+                  height: "300px",
+                }}
+              >
+                <ProductCard product={product} onAddToCart={onAddToCart} />
+              </Col>
+            ))}
+          </Row>
+        </Container>
+      </div>
     </>
   );
 };

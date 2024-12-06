@@ -1,12 +1,15 @@
 import { Link } from "react-router-dom";
 import useCartServices from "../../services/cart.services";
+import useCheckoutServices from "../../services/checkout.services";
 import Item from "./components/Item";
 import TotalPriceCard from "./components/TotalPriceCard";
 
 const Cart = () => {
-  const { getCartItems, getSelectedItems } = useCartServices();
+  const { getCartItems } = useCartServices();
+  const { getSelectedToCheckoutItems, getTotal } = useCheckoutServices();
   const items = getCartItems();
-  const selectedItems = getSelectedItems();
+  const selectedItems = getSelectedToCheckoutItems();
+  let total = getTotal();
 
   return (
     <div>
@@ -62,7 +65,7 @@ const Cart = () => {
             </div>
           </div>
           <div className="col-md-3">
-            <TotalPriceCard items={selectedItems} />
+            <TotalPriceCard items={selectedItems} total={total} />
           </div>
         </div>
       </div>

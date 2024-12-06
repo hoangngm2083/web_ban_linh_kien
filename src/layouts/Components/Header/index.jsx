@@ -2,7 +2,7 @@ import React, { lazy } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import { logo } from "../../../assets/images";
+import { logoImage } from "../../../assets/images";
 
 import { isLogged } from "../../../redux/slices/userSlice";
 import publicRoutes from "../../../routes";
@@ -49,10 +49,12 @@ const Header = () => {
         <div className="container-fluid">
           <div className="row g-3">
             <div className="col-md-3 text-center">
-              <Link to="/">
-                <img alt="logo" src={logo} />
+              <Link to="/" className="text-reset text-decoration-none">
+                <img alt="logo" className="me-2" src={logoImage} width="40px" />
+                <i className="fw-bold fs-5 text-uppercase">Web circuit</i>
               </Link>
             </div>
+
             <div className="col-md-5">
               <Search />
             </div>

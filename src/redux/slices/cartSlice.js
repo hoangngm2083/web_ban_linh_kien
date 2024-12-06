@@ -6,7 +6,6 @@ const initialState = {
   id: null, // userId ban đầu là null
   quantity: 0,
   items: [],
-  selectedItems: [],
 };
 
 // Tạo slice cho user
@@ -19,23 +18,18 @@ const cartSlice = createSlice({
       state.quantity = Number(action.payload?.quantity);
       state.items = action.payload?.items;
     },
-    addSelectedItem: (state, action) => {
-      if (!state.selectedItems) {
-        state.selectedItems = [];
-      }
-
-      state.selectedItems?.push(action.payload);
-    },
-    removeSelectedItem: (state, action) => {
-      const item = state.selectedItems?.find(
-        (item) => item.id == action.payload?.id
+    removeItems: (state, action) => {
+      const idsToRemove = action.payload.map((item) => {
+        state.quantity -= item.quantity;
+        return item.id;
+      });
+      state.items = state.items.filter(
+        (item) => !idsToRemove.includes(item.id)
       );
-      if (!item) return;
-      state.selectedItems = state.selectedItems?.filter((item) => {
-        return item.id != action.payload?.id;
+      state.items.forEach((ele, i) => {
+        ele.index = i;
       });
     },
-
     addItem: (state, action) => {
       const item = state.items?.find((item) => item.id == action.payload?.id);
 
@@ -73,28 +67,16 @@ const cartSlice = createSlice({
           };
         }),
       ];
-
-      state.selectedItems = state.selectedItems.filter(
-        (item) => item.id != action.payload?.id
-      );
     },
   },
 });
 
 // Xuất ra các action và reducer
-export const {
-  init,
-  addItem,
-  decrease,
-  increase,
-  removeItem,
-  addSelectedItem,
-  removeSelectedItem,
-} = cartSlice.actions;
+export const { init, addItem, decrease, increase, removeItem, removeItems } =
+  cartSlice.actions;
 
 export const getCartId = (state) => state.cart.id; // selector lấy userId
 export const getCartQuantity = (state) => state.cart.quantity; // selector lấy userId
 export const getCartItems = (state) => state.cart.items; // selector lấy userId
-export const getSelectedItems = (state) => state.cart.selectedItems;
 
 export default cartSlice.reducer;

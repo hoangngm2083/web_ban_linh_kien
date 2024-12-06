@@ -1,35 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import EditorCustom from "../../components/EditorCustom";
-import PopUp from "../../components/PopUp";
 import formatMoney from "../../helpers/formatMoney";
 import useCartServices from "../../services/cart.services";
-import productServices from "../../services/product.services";
+import { default as useProductServices } from "../../services/product.services";
 import QuantityForm from "./forms/QuantityForm";
-
-// const product = {
-//   id: 1,
-//   sku: "FAS-01",
-//   link: "/product/detail",
-//   name: "Great product name goes here",
-//   img: "https://bizweb.dktcdn.net/thumb/medium/100/190/540/products/camera-raspberry-pi-ov5647-5mp-160-do-jpeg.jpg?v=1664942814063",
-//   price: 180,
-//   originPrice: 200,
-//   discountPrice: 20,
-//   discountPercentage: 10,
-//   isNew: true,
-//   isHot: false,
-//   star: 4,
-//   isFreeShipping: true,
-//   description:
-//     "Nulla sodales sit amet orci eu vehicula. Curabitur metus velit, fermentum a velit ac, sodales egestas lacus. Etiam congue velit vel luctus dictum. Pellentesque at pellentesque sapien.",
-// };
 
 const ProductDetail = () => {
   const { id } = useParams(); // Lấy id từ URL
-  const [showPopup, setShowPopup] = useState(false);
+
   const [product, setProduct] = useState(null);
   const { addItem } = useCartServices();
+  const { getProduct } = useProductServices();
   const quantityRef = useRef(1);
   const handleAddItemToCart = async () => {
     await addItem({
@@ -58,16 +39,13 @@ const ProductDetail = () => {
   useEffect(() => {
     try {
       (async () => {
-        const res = await productServices.get(id);
+        const res = await getProduct(id);
         setProduct(res);
       })();
     } catch (error) {
       console.log(error?.message);
     }
   }, [id]);
-
-  const handleShow = () => setShowPopup(true);
-  const handleClose = () => setShowPopup(false);
 
   return (
     <div className="container-fluid mt-3">
@@ -100,26 +78,6 @@ const ProductDetail = () => {
                   <li>Etiam ullamcorper nibh eget faucibus dictum.</li>
                   <li>Cras consequat felis ut vulputate porttitor.</li>
                 </ul>
-                <button className="btn btn-primary" onClick={handleShow}>
-                  Update
-                </button>
-
-                <PopUp
-                  title="Update Product"
-                  child={
-                    <EditorCustom
-                      initialValue={`<ul className="small">
-                  <li>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </li>
-                  <li>Etiam ullamcorper nibh eget faucibus dictum.</li>
-                  <li>Cras consequat felis ut vulputate porttitor.</li>
-                </ul>`}
-                    />
-                  }
-                  show={showPopup}
-                  handleClose={handleClose}
-                />
               </div>
               <div className="mb-3">
                 <QuantityForm

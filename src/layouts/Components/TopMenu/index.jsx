@@ -1,21 +1,24 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import DropBox from "../../../components/DropBox";
 import publicRoutes from "../../../routes";
+import useProductServices from "../../../services/product.services";
 
 const TopMenu = () => {
-  const productCats = [
-    {
-      name: "Raspberry pi",
-      path: "/raspberry",
-    },
-    {
-      name: "Robot",
-      path: "/raspberry",
-    },
-    {
-      name: "Arduino",
-      path: "/raspberry",
-    },
-  ];
+  const { getProductTypes, getProductTypesFromDB } = useProductServices();
+  const [productTypes, setProductTypes] = useState(null);
+
+  useEffect(() => {
+    const res = getProductTypes();
+    if (!res) {
+      (async () => {
+        const data = await getProductTypesFromDB();
+        setProductTypes(data);
+      })();
+      return;
+    }
+    setProductTypes(res);
+  }, []); // Dependency array ensures this runs once
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark p-0">
@@ -46,17 +49,7 @@ const TopMenu = () => {
               >
                 Products
               </button>
-              <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                {productCats.map((pCat, index) => {
-                  return (
-                    <li key={index}>
-                      <Link className="dropdown-item" to={pCat.path}>
-                        {pCat.name.toUpperCase()}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+              <DropBox data={productTypes} />
             </li>
             <li className="nav-item">
               <Link className="nav-link" to={publicRoutes.blog.path}>
@@ -71,16 +64,6 @@ const TopMenu = () => {
             <li className="nav-item">
               <Link className="nav-link" to={publicRoutes.contact.path}>
                 Contacts
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/products/1">
-                Product 1
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/products/2">
-                Product 2
               </Link>
             </li>
           </ul>

@@ -2,11 +2,15 @@ import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import formatMoney from "../../../helpers/formatMoney";
 import useCartServices from "../../../services/cart.services";
+import useCheckoutServices from "../../../services/checkout.services";
 import QuantityForm from "../../product/forms/QuantityForm";
 
 const Item = ({ item, setUpIsSelected }) => {
   const [isSelected, setIsSelected] = useState(setUpIsSelected);
-  const { addSelectedItem, removeSelectedItem } = useCartServices();
+
+  const { addSelectedToCheckoutItems, removeSelectedToCheckoutItems } =
+    useCheckoutServices();
+
   const quantityRef = useRef(1);
   const { increase, decrease, removeItem } = useCartServices();
   const handleIncrease = () => {
@@ -28,12 +32,12 @@ const Item = ({ item, setUpIsSelected }) => {
   };
   const handleSelectedCheckout = () => {
     if (!isSelected) {
-      addSelectedItem(item);
+      addSelectedToCheckoutItems(item);
       setIsSelected((pre) => !pre);
       return;
     }
 
-    removeSelectedItem(item);
+    removeSelectedToCheckoutItems(item);
     setIsSelected((pre) => !pre);
   };
   return (

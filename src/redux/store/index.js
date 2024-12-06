@@ -1,7 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 import {
-  createTransform,
   FLUSH,
   PAUSE,
   PERSIST,
@@ -14,33 +13,37 @@ import {
 import storage from "redux-persist/lib/storage"; // sử dụng localStorage
 
 import cartReducer from "../slices/cartSlice";
+import checkoutReducer from "../slices/checkoutSlice";
+import productReducer from "../slices/productSlice";
 import userReducer from "../slices/userSlice";
 
-// Tạo transform để loại trừ `selectedItems` khỏi `cart` reducer
-const excludeSelectedItems = createTransform(
-  // Chuyển đổi state trước khi lưu vào persist storage
-  (inboundState, key) => {
-    if (key === "cart") {
-      const { selectedItems, ...rest } = inboundState; // Loại bỏ `selectedItems`
-      return rest;
-    }
-    return inboundState;
-  },
-  // Chuyển đổi state sau khi load từ persist storage
-  (outboundState, key) => outboundState,
-  { whitelist: ["cart"] } // Chỉ áp dụng với `cart` reducer
-);
+// // Tạo transform để loại trừ `selectedItems` khỏi `cart` reducer
+// const excludeSelectedItems = createTransform(
+//   // Chuyển đổi state trước khi lưu vào persist storage
+//   (inboundState, key) => {
+//     if (key === "cart") {
+//       const { selectedItems, ...rest } = inboundState; // Loại bỏ `selectedItems`
+//       return rest;
+//     }
+//     return inboundState;
+//   },
+//   // Chuyển đổi state sau khi load từ persist storage
+//   (outboundState, key) => outboundState,
+//   { whitelist: ["cart"] } // Chỉ áp dụng với `cart` reducer
+// );
 
 // Cấu hình redux-persist
 const persistConfig = {
   key: "root",
   storage,
-  transforms: [excludeSelectedItems],
+  // transforms: [excludeSelectedItems],
 };
 
 const rootReducer = combineReducers({
   user: userReducer,
   cart: cartReducer,
+  checkout: checkoutReducer,
+  product: productReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

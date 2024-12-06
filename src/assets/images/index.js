@@ -1,3 +1,3 @@
-import logo from "./logo.webp";
+import logoImage from "./logo.png";
 
-export { logo };
+export { logoImage };
