@@ -1,9 +1,29 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import { isLogged as isLoggedSlice } from "../../../redux/slices/userSlice";
+import publicRoutes from "../../../routes";
 import useCheckoutServices from "../../../services/checkout.services";
 
-const ShippingForm = ({ totalPrice }) => {
+const ShippingForm = ({ items, totalPrice }) => {
+  const navigate = useNavigate();
+  const { getShipingInfo, getPaymentUrl, setInvoice } = useCheckoutServices();
+  const isLogged = useSelector(isLoggedSlice);
+
+  const infos = getShipingInfo();
+
+  // Giá trị khởi tạo của form
+
+  const [addressIndex, setAddressIndex] = useState(0);
+
+  let initialValues = {
+    ...infos[addressIndex],
+    paymentMethod: "VNPay", // Giá trị ban đầu cho paymentMethod
+  };
+
+  useEffect(() => {}, [addressIndex]);
   // Validation schema với Yup
   const validationSchema = Yup.object({
     name: Yup.string().required("Name is required"),
@@ -18,31 +38,59 @@ const ShippingForm = ({ totalPrice }) => {
     paymentMethod: Yup.string().required("Payment method is required"),
   });
 
-  const { getShipingInfo, getPaymentUrl } = useCheckoutServices();
-  const info = getShipingInfo();
-  // Giá trị khởi tạo của form
-  const initialValues = {
-    ...info,
-    paymentMethod: "VNPay", // Giá trị ban đầu cho paymentMethod
-  };
-
   // Hàm xử lý khi submit form
-  const onSubmit = () => {
+  const onSubmit = ({ paymentMethod, ...rest }) => {
+    if (!isLogged) {
+      alert("You need to log in!");
+      navigate(publicRoutes.login.path);
+      return;
+    }
+    const invoice = {
+      items,
+      totalPrice,
+      shippingInfor: rest,
+      paymentMethod: paymentMethod == "VNPay" ? 1 : 0,
+    };
+    setInvoice(invoice);
+
     const url = getPaymentUrl({ amount: totalPrice });
-    // console.log(url);
 
     window.location.href = url;
   };
 
   return (
     <div className="card mb-3">
-      <div className="card-header">
-        <i className="bi bi-envelope"></i> Shipping Info
+      <div className="card-header d-flex justify-content-between">
+        <div className="d-flex align-items-center">
+          <i className="bi bi-envelope mx-2"></i> Shipping Info
+        </div>
+        <div>
+          <select
+            className="form-select"
+            aria-label="Default select example"
+            onChange={(e) => {
+              const selectedIndex = e.target.value; // Lấy giá trị được chọn
+              console.log("Selected index:", selectedIndex);
+
+              setAddressIndex(selectedIndex);
+            }}
+          >
+            {infos?.map((value, index) => {
+              return (
+                <option key={index} value={index}>
+                  Address {index + 1}
+                </option>
+              );
+            })}
+          </select>
+        </div>
       </div>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={(value) => {
+          onSubmit(value);
+        }}
       >
         {({ isSubmitting }) => (
           <Form>
@@ -54,7 +102,7 @@ const ShippingForm = ({ totalPrice }) => {
                   id="name"
                   name="name"
                   className="form-control"
-                  placeholder="Email Address"
+                  placeholder="Full Name"
                 />
                 <ErrorMessage
                   name="name"
@@ -160,7 +208,7 @@ const ShippingForm = ({ totalPrice }) => {
               className="btn btn-primary"
               disabled={isSubmitting}
             >
-              Submit
+              Checkout
             </button>
           </Form>
         )}

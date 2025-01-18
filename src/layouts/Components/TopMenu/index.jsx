@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import DropBox from "../../../components/DropBox";
+import { getProductTypes } from "../../../redux/slices/productSlice";
 import publicRoutes from "../../../routes";
 import useProductServices from "../../../services/product.services";
 
 const TopMenu = () => {
-  const { getProductTypes, getProductTypesFromDB } = useProductServices();
+  const { getProductTypesFromDB } = useProductServices();
   const [productTypes, setProductTypes] = useState(null);
-
+  const res = useSelector(getProductTypes);
   useEffect(() => {
-    const res = getProductTypes();
     if (!res) {
       (async () => {
         const data = await getProductTypesFromDB();
@@ -73,4 +74,4 @@ const TopMenu = () => {
   );
 };
 
-export default TopMenu;
+export default React.memo(TopMenu);

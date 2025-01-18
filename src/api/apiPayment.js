@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 const tmnCode = "T5GH0RCU"; // Mã TmnCode của bạn
 const secretKey = "T1FTTHNJEK6NEA1S7GZMU2YOXL0LFQWL"; // Hash Secret của bạn
 const vnpUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-const vnpReturnUrl = "http://localhost:3001/thanks";
+const vnpReturnUrl = "http://localhost:3000/thanks";
 
 const createVnpayHash = (params, secretKey) => {
   // Sắp xếp các tham số theo thứ tự alphabet, loại bỏ tham số rỗng

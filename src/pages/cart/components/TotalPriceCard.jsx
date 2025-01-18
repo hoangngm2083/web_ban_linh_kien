@@ -6,12 +6,12 @@ const TotalPriceCard = ({ items, total }) => {
     <div className="card">
       <div className="card-body">
         <dl className="row border-bottom">
-          <dt className="col-6">Total price:</dt>
+          <dt className="col-6">Total Original Price:</dt>
           <dd className="col-6 text-end">
             ${formatMoney(total?.totalOriginPrice) || 0}
           </dd>
 
-          <dt className="col-6 text-success">Discount:</dt>
+          <dt className="col-6 text-success">Total Discount:</dt>
           <dd className="col-6 text-success text-end">
             ${formatMoney(total?.totalDiscountPrice) || 0}
           </dd>

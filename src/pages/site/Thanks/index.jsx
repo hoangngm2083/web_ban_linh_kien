@@ -1,17 +1,21 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import formatMoney from "../../../helpers/formatMoney";
+import { getInvoice } from "../../../redux/slices/checkoutSlice";
 import useCartServices from "../../../services/cart.services";
 import useCheckoutServices from "../../../services/checkout.services";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const Thanks = () => {
-  const location = useLocation();
-  const [products, setProducts] = useState([]);
-  const { getSelectedToCheckoutItems, getShipingInfo, resetCheckout } =
-    useCheckoutServices();
   const { removeItems } = useCartServices();
-  const ps = getSelectedToCheckoutItems();
-  const shipingInfo = getShipingInfo();
+  const {
+    getSelectedToCheckoutItems,
+    getShipingInfo,
+    resetCheckout,
+    postInvoiceToDb,
+  } = useCheckoutServices();
+
+  const [products, setProducts] = useState([]);
   const [transaction, setTransaction] = useState({
     status: "",
     transactionCode: "",
@@ -20,10 +24,13 @@ const Thanks = () => {
     orderInfo: "",
   });
 
+  const location = useLocation();
+  const invoice = useSelector(getInvoice);
+  const ps = getSelectedToCheckoutItems();
+  const shipingInfo = invoice?.ShippingInfo;
+
   useEffect(() => {
     setProducts(ps);
-    removeItems(ps);
-    resetCheckout();
 
     const queryParams = new URLSearchParams(location.search);
 
@@ -51,7 +58,16 @@ const Thanks = () => {
       paymentTime: formatPaymentTime(vnp_PayDate),
       orderInfo: vnp_OrderInfo,
     });
-  }, [location]);
+
+    if (vnp_ResponseCode === "00") {
+      (async () => {
+        const res = await postInvoiceToDb(invoice);
+        console.log("res", res);
+        removeItems(ps);
+        resetCheckout();
+      })();
+    }
+  }, []);
 
   return (
     <div className="container-fluid">
@@ -83,15 +99,7 @@ const Thanks = () => {
           <div className="row mt-4">
             <h4 className="mb-4">Shipping Info</h4>
             <div className="list-group">
-              <div className="list-group-item">
-                <strong>Recipient Name</strong> {shipingInfo?.name}
-              </div>
-              <div className="list-group-item">
-                <strong>PhoneNumber:</strong> {shipingInfo?.phoneNumber}
-              </div>
-              <div className="list-group-item">
-                <strong>address:</strong> {shipingInfo?.address}
-              </div>
+              <div className="list-group-item">{shipingInfo}</div>
             </div>
           </div>
         </div>
@@ -109,20 +117,24 @@ const Thanks = () => {
                       className="col-md-4"
                     >
                       <img
-                        src={product?.img}
+                        src={apiUrl + product?.image}
+                        crossOrigin="anonymous"
                         className=" object-fit-cover"
-                        alt={product?.name}
+                        alt={product?.productName}
                         style={{ height: "100%", overflow: "hidden" }}
                       />
                     </div>
                     <div className="col-md-8">
                       <div className="card-body">
-                        <h5 className="card-title">{product?.name}</h5>
+                        <h5 className="card-title">{product?.productName}</h5>
                         <p className="card-text">
-                          <strong>Price:</strong> {formatMoney(product?.price)}{" "}
+                          <strong>Price:</strong>{" "}
+                          {formatMoney(
+                            (product?.price * (100 - product?.sale)) / 100
+                          )}{" "}
                           VND
                           <br />
-                          <strong>Quantity:</strong> {product.quantity}
+                          <strong>Quantity:</strong> {product.quantitySelected}
                         </p>
                       </div>
                     </div>

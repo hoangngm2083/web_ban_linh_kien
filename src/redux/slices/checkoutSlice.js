@@ -3,11 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 // Khởi tạo trạng thái ban đầu
 const initialState = {
-  quantity: 0,
+  quantitySelected: 0,
   totalDiscountPrice: 0,
   totalPrice: 0,
   totalOriginPrice: 0,
   selectedToCheckoutItems: [],
+  invoice: null,
 };
 
 // Tạo slice cho user
@@ -15,12 +16,32 @@ const checkoutSlice = createSlice({
   name: "checkout",
   initialState,
   reducers: {
+    setInvoice: (state, action) => {
+      state.invoice = {
+        PaidMethod: action.payload?.paymentMethod,
+        IsPaid: action.payload?.isPaid || 1,
+        ShippingInfo:
+          "" +
+          action.payload?.shippingInfor?.name +
+          ", " +
+          action.payload?.shippingInfor?.phoneNumber +
+          ", " +
+          action.payload?.shippingInfor?.address,
+        SelectedProducts: action.payload?.items.map((ele) => {
+          return {
+            ProductID: ele.productID,
+            OrderedNumber: ele.quantitySelected,
+          };
+        }),
+      };
+    },
     resetCheckout: (state, action) => {
-      state.quantity = 0;
+      state.quantitySelected = 0;
       state.totalDiscountPrice = 0;
       state.totalPrice = 0;
       state.totalOriginPrice = 0;
       state.selectedToCheckoutItems = [];
+      state.invoice = null;
     },
 
     addSelectedToCheckoutItems: (state, action) => {
@@ -29,31 +50,44 @@ const checkoutSlice = createSlice({
       }
       state.selectedToCheckoutItems?.push(action.payload);
       //
-      state.quantity += Number(action.payload?.quantity);
+      state.quantitySelected += Number(action.payload?.quantitySelected);
       state.totalDiscountPrice +=
-        Number(action.payload?.discountPrice) *
-        Number(action.payload?.quantity);
+        ((Number(action.payload?.price) * Number(action.payload?.sale)) / 100) *
+        Number(action.payload?.quantitySelected);
+
       state.totalOriginPrice +=
-        Number(action.payload?.originPrice) * Number(action.payload?.quantity);
+        Number(action.payload?.price) *
+        Number(action.payload?.quantitySelected);
+
       state.totalPrice +=
-        Number(action.payload?.price) * Number(action.payload?.quantity);
+        ((Number(action.payload?.price) *
+          (100 - Number(action.payload?.sale))) /
+          100) *
+        Number(action.payload?.quantitySelected);
     },
+
     removeSelectedToCheckoutItem: (state, action) => {
       const item = state.selectedToCheckoutItems?.find(
-        (item) => item.id == action.payload?.id
+        (item) => item.productID == action.payload?.productID
       );
       if (!item) return;
       state.selectedToCheckoutItems = state.selectedToCheckoutItems?.filter(
         (item) => {
-          if (item.id != action.payload?.id) {
+          if (item.productID != action.payload?.productID) {
             return true;
           }
-          state.quantity -= Number(item.quantity);
+          state.quantitySelected -= Number(item.quantitySelected);
           state.totalDiscountPrice -=
-            Number(item.discountPrice) * Number(item.quantity);
+            ((Number(item.price) * Number(item.sale)) / 100) *
+            Number(item.quantitySelected);
+
           state.totalOriginPrice -=
-            Number(item.originPrice) * Number(item.quantity);
-          state.totalPrice -= Number(item.price) * Number(item.quantity);
+            Number(item.price) * Number(item.quantitySelected);
+
+          state.totalPrice -=
+            ((Number(item.price) * (100 - Number(item.sale))) / 100) *
+            Number(item.quantitySelected);
+
           return false;
         }
       );
@@ -66,6 +100,7 @@ export const {
   addSelectedToCheckoutItems,
   removeSelectedToCheckoutItem,
   resetCheckout,
+  setInvoice,
 } = checkoutSlice.actions;
 
 export const getTotal = (state) => {
@@ -73,10 +108,16 @@ export const getTotal = (state) => {
     totalDiscountPrice: state.checkout.totalDiscountPrice,
     totalPrice: state.checkout.totalPrice,
     totalOriginPrice: state.checkout.totalOriginPrice,
-    quantity: state.checkout.quantity,
+    quantitySelected: state.checkout.quantitySelected,
   };
 };
 export const getSelectedToCheckoutItems = (state) =>
   state.checkout?.selectedToCheckoutItems;
+
+export const getInvoice = (state) => {
+  console.log("state.checkout?.invoice: ", state?.checkout?.invoice);
+
+  return state?.checkout?.invoice;
+};
 
 export default checkoutSlice.reducer;

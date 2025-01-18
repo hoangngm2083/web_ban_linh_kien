@@ -6,12 +6,14 @@ import { logoImage } from "../../../assets/images";
 
 import { isLogged } from "../../../redux/slices/userSlice";
 import publicRoutes from "../../../routes";
+import useAuthServices from "../../../services/auth.services";
 import CartHeader from "./Cart.Header";
 
 const Search = lazy(() => import("../../../components/Search"));
 
 const Header = () => {
   const loggedIn = useSelector(isLogged);
+  const { logout } = useAuthServices();
   return (
     <>
       <div className="container-fluid bg-light">
@@ -77,54 +79,38 @@ const Header = () => {
                     </button>
                     <ul className="dropdown-menu">
                       <li>
-                        <Link className="dropdown-item" to="/account/profile">
+                        <Link
+                          className="dropdown-item"
+                          to={publicRoutes.profile.path}
+                        >
                           <i className="bi bi-person-square"></i> My Profile
                         </Link>
                       </li>
-                      <li>
-                        <Link className="dropdown-item" to="/star/zone">
-                          <i className="bi bi-star-fill text-warning"></i> Star
-                          Zone
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/account/orders">
-                          <i className="bi bi-list-check text-primary"></i>{" "}
-                          Orders
-                        </Link>
-                      </li>
-                      <li>
-                        <Link className="dropdown-item" to="/account/wishlist">
-                          <i className="bi bi-heart-fill text-danger"></i>{" "}
-                          Wishlist
-                        </Link>
-                      </li>
-                      <li>
-                        <hr className="dropdown-divider" />
-                      </li>
+
                       <li>
                         <Link
                           className="dropdown-item"
-                          to="/account/notification"
+                          to={publicRoutes.invoices.path}
                         >
-                          <i className="bi bi-bell-fill text-primary"></i>
-                          Notification
+                          <i className="bi bi-list-check text-primary"></i>{" "}
+                          Invoices
                         </Link>
                       </li>
-                      <li>
-                        <Link className="dropdown-item" to="/support">
-                          <i className="bi bi-info-circle-fill text-success"></i>
-                          Support
-                        </Link>
-                      </li>
+
                       <li>
                         <hr className="dropdown-divider" />
                       </li>
                       <li>
-                        <Link className="dropdown-item" to="/">
+                        <button
+                          onClick={() => {
+                            logout();
+                          }}
+                          className="dropdown-item"
+                          to="/"
+                        >
                           <i className="bi bi-door-closed-fill text-danger"></i>
                           Logout
-                        </Link>
+                        </button>
                       </li>
                     </ul>
                   </div>

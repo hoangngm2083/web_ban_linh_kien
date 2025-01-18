@@ -6,24 +6,25 @@ import useCheckoutServices from "../../../services/checkout.services";
 import QuantityForm from "../../product/forms/QuantityForm";
 
 const Item = ({ item, setUpIsSelected }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [isSelected, setIsSelected] = useState(setUpIsSelected);
 
-  const { addSelectedToCheckoutItems, removeSelectedToCheckoutItems } =
+  const { addSelectedToCheckoutItems, removeSelectedToCheckoutItem } =
     useCheckoutServices();
 
-  const quantityRef = useRef(1);
+  const quantityRef = useRef();
   const { increase, decrease, removeItem } = useCartServices();
   const handleIncrease = () => {
     increase({
       index: item?.index,
-      quantity: quantityRef.current.value,
+      quantitySelected: quantityRef.current?.value,
     });
   };
 
   const handleDecrease = () => {
     decrease({
       index: item?.index,
-      quantity: quantityRef.current.value,
+      quantitySelected: quantityRef.current?.value,
     });
   };
 
@@ -37,7 +38,7 @@ const Item = ({ item, setUpIsSelected }) => {
       return;
     }
 
-    removeSelectedToCheckoutItems(item);
+    removeSelectedToCheckoutItem(item);
     setIsSelected((pre) => !pre);
   };
   return (
@@ -45,13 +46,23 @@ const Item = ({ item, setUpIsSelected }) => {
       <td>
         <div className="row">
           <div className="col-3 d-none d-md-block">
-            <img src={item?.img} width="80" alt="..." />
+            <img
+              crossOrigin="anonymous"
+              src={apiUrl + item?.image}
+              width="80"
+              alt="..."
+            />
           </div>
           <div className="col">
-            <Link to={"/products/" + item?.id} className="text-decoration-none">
-              {item?.name}
+            <Link
+              to={"/products/" + item?.productID}
+              className="text-decoration-none"
+            >
+              {item?.productName}
             </Link>
-            <p className="small text-muted">{item?.type}</p>
+            <p className="small text-muted">
+              {item?.productCatalog?.productCatalogName}
+            </p>
           </div>
         </div>
       </td>
@@ -60,11 +71,18 @@ const Item = ({ item, setUpIsSelected }) => {
           quantityRef={quantityRef}
           handleIncrease={handleIncrease}
           handleDecrease={handleDecrease}
-          initValue={item?.quantity}
+          initValue={item?.quantitySelected}
         />
       </td>
       <td>
-        <var className="price">{formatMoney(item?.price * item.quantity)}</var>
+        <var className="price">
+          {formatMoney(
+            item?.sale > 0
+              ? ((item?.price * (100 - item?.sale)) / 100) *
+                  item.quantitySelected
+              : item?.price * item.quantitySelected
+          )}
+        </var>
         <small className="d-block text-muted">{formatMoney(item?.price)}</small>
       </td>
       <td className="text-end">

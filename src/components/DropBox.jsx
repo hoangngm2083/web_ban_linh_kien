@@ -7,8 +7,11 @@ const DropBox = ({ data }) => (
       {data?.map((d, index) => {
         return (
           <li key={index}>
-            <Link className="dropdown-item" to={d?.path}>
-              {d?.name.toUpperCase()}
+            <Link
+              className="dropdown-item"
+              to={`/products?ptype=${d?.productCatalogID}`}
+            >
+              {d?.productCatalogName.toUpperCase()}
             </Link>
           </li>
         );

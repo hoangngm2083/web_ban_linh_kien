@@ -1,117 +1,69 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import api, { apiPath } from "../api";
 import { setProductTypes } from "../redux/slices/productSlice";
-
-const products = [
-  {
-    id: 1,
-    name: "Raspberry Pi Model 3+",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://encrypted-tbn3.gstatic.com/shopping?q=tbn:ANd9GcQwhyjp9SwNyVpBl-cRvq9u3EPkiILiqwdp2N5dsTL2MkgOK-PazJ8pttVYkc4akmtMstdiVOpGPfKeQp8MTE4qile28uZuY-lVJ4yt4_ehDFbX4rSjsESGi3Y",
-  },
-  {
-    id: 2,
-    name: "Mạch sạc nhanh pin 18650 5V2.4A có led hiển thị",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://bizweb.dktcdn.net/thumb/large/100/190/540/products/mach-sac-nhanh-pin-18650-5v2-4a-jpeg.jpg?v=1732245954353",
-  },
-  {
-    id: 3,
-    name: "Mạch sạc nhanh pin 18650 5V2.4A có led hiển thị",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://bizweb.dktcdn.net/thumb/large/100/190/540/products/mach-sac-nhanh-pin-18650-5v2-4a-jpeg.jpg?v=1732245954353",
-  },
-  {
-    id: 4,
-    name: "Mạch sạc nhanh pin 18650 5V2.4A có led hiển thị",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://bizweb.dktcdn.net/thumb/large/100/190/540/products/mach-sac-nhanh-pin-18650-5v2-4a-jpeg.jpg?v=1732245954353",
-  },
-  {
-    id: 5,
-    name: "Mạch sạc nhanh pin 18650 5V2.4A có led hiển thị",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://bizweb.dktcdn.net/thumb/large/100/190/540/products/mach-sac-nhanh-pin-18650-5v2-4a-jpeg.jpg?v=1732245954353",
-  },
-  {
-    id: 6,
-    name: "Mạch sạc nhanh pin 18650 5V2.4A có led hiển thị",
-    price: 1150000,
-    discountPrice: 50000,
-    originPrice: 1200000,
-    img: "https://bizweb.dktcdn.net/thumb/large/100/190/540/products/mach-sac-nhanh-pin-18650-5v2-4a-jpeg.jpg?v=1732245954353",
-  },
-];
-
-// const productTypes =
 
 const useProductServices = () => {
   const dispatch = useDispatch();
-  const productTypesFromState = useSelector((state) => state.productTypes);
-  //   get: async (id) => {
-  //     try {
-  //       const product = await api
-  //         .get(apiPath.product.get + id)
-  //         .then((res) => res.json());
-  //       return product;
-  //     } catch (e) {
-  //       handleErrorServices(e?.message);
-  //     }
-  //   },
+
   return {
-    getProducts: () => {
+    getProductsFromDb: async (params) => {
+      const res = await api.get(apiPath.product.getAll, { params });
+      const ps = res.data.data.products;
+
+      return ps;
+    },
+
+    getProductsWithNameFromDb: async (name) => {
+      const res = await api.get(apiPath.search.searchProducts, {
+        params: {
+          searchName: name,
+        },
+      });
+      const products = res.data?.data?.products;
+
+      return products;
+    },
+
+    getProductFromDb: async (id) => {
+      const res = await api.get(apiPath.product.getAll + "/" + id);
+      const product = res.data.data?.product;
+
+      return product;
+    },
+    getProductsWithType: (ptype) => {
       return new Promise((resolve) => {
         setTimeout(() => {
-          resolve(products);
+          const data = products.filter((product) => product.type == ptype);
+
+          resolve(data);
+        }, 0);
+      });
+    },
+    getProductWithPrice: (fromPrice, toPrice) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          const data = products.filter(
+            (product) =>
+              product?.price >= fromPrice && product?.price <= toPrice
+          );
+
+          resolve(data);
         }, 0);
       });
     },
 
-    getProduct: (id) => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const product = products[id - 1];
-          resolve(product);
-        }, 0);
-      });
-    },
+    getProductTypesFromDB: async () => {
+      const res = await api.get(apiPath.product.getProductTypes);
+      const productTypes = res.data.data?.productCatalogs;
+      dispatch(setProductTypes(productTypes));
 
-    getProductTypes: () => {
-      return productTypesFromState;
+      return productTypes;
     },
-    getProductTypesFromDB: () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          const productTypes = [
-            {
-              name: "Raspberry pi",
-              id: "raspberryPi",
-            },
-            {
-              name: "Robot",
-              id: "robot",
-            },
-            {
-              name: "Arduino",
-              id: "adruino",
-            },
-          ];
-          const pts = productTypes.map((pt) => {
-            return { ...pt, path: "/products?pType" + pt?.id };
-          });
-          dispatch(setProductTypes(pts));
-          resolve(pts);
-        }, 0);
-      });
+    getCheapestProductsFromDB: async () => {
+      const res = await api.get(apiPath.product.getCheapestProducts);
+      const cheapestProduct = res.data.data?.products;
+
+      return cheapestProduct;
     },
   };
 };

@@ -4,18 +4,18 @@ import formatMoney from "../../helpers/formatMoney";
 import useCartServices from "../../services/cart.services";
 import { default as useProductServices } from "../../services/product.services";
 import QuantityForm from "./forms/QuantityForm";
-
+const apiUrl = import.meta.env.VITE_API_URL;
 const ProductDetail = () => {
   const { id } = useParams(); // Lấy id từ URL
 
   const [product, setProduct] = useState(null);
   const { addItem } = useCartServices();
-  const { getProduct } = useProductServices();
+  const { getProductFromDb } = useProductServices();
   const quantityRef = useRef(1);
   const handleAddItemToCart = async () => {
     await addItem({
       ...product,
-      quantity: Number(quantityRef?.current?.value),
+      quantitySelected: Number(quantityRef?.current?.value),
     });
   };
   // Hàm tăng số lượng
@@ -39,7 +39,7 @@ const ProductDetail = () => {
   useEffect(() => {
     try {
       (async () => {
-        const res = await getProduct(id);
+        const res = await getProductFromDb(id);
         setProduct(res);
       })();
     } catch (error) {
@@ -53,31 +53,40 @@ const ProductDetail = () => {
         <div className="col-md-8">
           <div className="row mb-3">
             <div className="col-md-5 text-center">
-              <img src={product?.img} className="img-fluid mb-3" alt="" />
+              <img
+                crossOrigin="anonymous"
+                src={apiUrl + product?.image}
+                className="img-fluid mb-3"
+                alt=""
+              />
             </div>
             <div className="col-md-7">
-              <h1 className="h5 d-inline me-2 bold">{product?.name}</h1>
+              <h1 className="h5 d-inline me-2 bold">{product?.productName}</h1>
 
               <div className="my-2">
                 <span className="fw-bold h5 me-2 text-primary">
-                  ${formatMoney(product?.price)}
+                  ${formatMoney((product?.price * (100 - product?.sale)) / 100)}
                 </span>
-                <del className="small text-muted me-2">
-                  ${formatMoney(product?.originPrice)}
-                </del>
-                <span className="rounded p-1 bg-warning  me-2 small text-danger">
-                  - ${formatMoney(product?.discountPrice)}
-                </span>
+                {product?.sale > 0 && (
+                  <>
+                    <del className="small text-muted me-2">
+                      ${formatMoney(product?.price)}
+                    </del>
+                    <span className="rounded p-1 bg-warning  me-2 small text-danger">
+                      - ${formatMoney(product?.sale)}
+                    </span>
+                  </>
+                )}
               </div>
               <div>
-                <p className="fw-bold mb-2 small">Product Highlights</p>
-                <ul className="small">
-                  <li>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                  </li>
-                  <li>Etiam ullamcorper nibh eget faucibus dictum.</li>
-                  <li>Cras consequat felis ut vulputate porttitor.</li>
-                </ul>
+                <p
+                  className=" mb-2 small"
+                  style={{
+                    fontSize: "13px",
+                  }}
+                >
+                  {product?.productInformation}
+                </p>
               </div>
               <div className="mb-3">
                 <QuantityForm

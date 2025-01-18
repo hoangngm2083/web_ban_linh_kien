@@ -41,7 +41,8 @@ const Cart = () => {
                         item={item}
                         setUpIsSelected={
                           !!selectedItems?.find(
-                            (selectedItem) => selectedItem.id == item.id
+                            (selectedItem) =>
+                              selectedItem.productID == item.productID
                           )
                         }
                       />
@@ -69,27 +70,122 @@ const Cart = () => {
           </div>
         </div>
       </div>
-      <div className="bg-light border-top p-4">
-        <div className="container">
-          <h6>Payment and refund policy</h6>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. Duis aute irure dolor in
-            reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
-            culpa qui officia deserunt mollit anim id est laborum.
-          </p>
+      <div className="container my-5">
+        <h2 className="text-center mb-4">Payment and Refund Policy</h2>
+        <div className="accordion" id="policyAccordion">
+          {/* Payment Policy Section */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingPayment">
+              <button
+                className="accordion-button"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapsePayment"
+                aria-expanded="true"
+                aria-controls="collapsePayment"
+              >
+                Payment Policy
+              </button>
+            </h2>
+            <div
+              id="collapsePayment"
+              className="accordion-collapse collapse show"
+              aria-labelledby="headingPayment"
+              data-bs-parent="#policyAccordion"
+            >
+              <div className="accordion-body">
+                <ul>
+                  <li>
+                    <strong>Accepted Payment Methods:</strong> VNPay
+                  </li>
+                  <li>
+                    <strong>Payment Terms:</strong> Payments must be completed
+                    before delivery unless specified otherwise.
+                  </li>
+                  <li>
+                    <strong>Currency:</strong> Transactions are processed in
+                    [Specify Currency].
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {/* Refund Policy Section */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingRefund">
+              <button
+                className="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseRefund"
+                aria-expanded="false"
+                aria-controls="collapseRefund"
+              >
+                Refund Policy
+              </button>
+            </h2>
+            <div
+              id="collapseRefund"
+              className="accordion-collapse collapse"
+              aria-labelledby="headingRefund"
+              data-bs-parent="#policyAccordion"
+            >
+              <div className="accordion-body">
+                <ul>
+                  <li>
+                    <strong>Eligibility:</strong> Refunds for defective products
+                    or services not rendered as agreed.
+                  </li>
+                  <li>
+                    <strong>Non-Refundable:</strong> Clearance items, accessed
+                    digital products, fully rendered services.
+                  </li>
+                  <li>
+                    <strong>Process:</strong> Contact us within 7 days. Refunds
+                    are processed within 7-10 business days.
+                  </li>
+                  <li>
+                    <strong>Mode:</strong> Refunds are issued to the original
+                    payment method.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {/* Contact Section */}
+          <div className="accordion-item">
+            <h2 className="accordion-header" id="headingContact">
+              <button
+                className="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseContact"
+                aria-expanded="false"
+                aria-controls="collapseContact"
+              >
+                Contact Us
+              </button>
+            </h2>
+            <div
+              id="collapseContact"
+              className="accordion-collapse collapse"
+              aria-labelledby="headingContact"
+              data-bs-parent="#policyAccordion"
+            >
+              <div className="accordion-body">
+                <p>
+                  <strong>Email:</strong> hoangminhng208@egmail.com
+                </p>
+                <p>
+                  <strong>Phone:</strong> +0889795780
+                </p>
+                <p>
+                  <strong>Address:</strong> 41D Chu Van An, Hiep Phu, Thu Duc,
+                  tp HCM
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

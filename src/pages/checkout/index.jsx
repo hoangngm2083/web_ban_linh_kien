@@ -19,7 +19,7 @@ const Checkout = () => {
       <div className="container mb-3">
         <div className="row">
           <div className="col-md-8">
-            <ShippingForm totalPrice={totalPrice} />
+            <ShippingForm items={items} totalPrice={totalPrice} />
           </div>
           <div className="col-md-4">
             <div className="card">

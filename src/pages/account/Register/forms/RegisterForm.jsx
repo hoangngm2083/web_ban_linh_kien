@@ -5,28 +5,26 @@ import * as Yup from "yup";
 const SignupForm = (params) => {
   const { handleSubmit } = params;
 
-  // Xác thực bằng Yup
   const validationSchema = Yup.object().shape({
-    name: Yup.string()
-      .min(2, "Tên phải có ít nhất 2 ký tự")
-      .required("Vui lòng nhập tên"),
+    accountName: Yup.string()
+      .min(2, "Name must be at least 2 characters")
+      .required("Please enter your account name"),
     email: Yup.string()
-      .email("Địa chỉ email không hợp lệ")
-      .required("Vui lòng nhập email"),
+      .email("Invalid email address")
+      .required("Please enter your email"),
     password: Yup.string()
-      .min(6, "Mật khẩu phải có ít nhất 6 ký tự")
-      .required("Vui lòng nhập mật khẩu"),
+      .min(6, "Password must be at least 6 characters")
+      .required("Please enter your password"),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref("password"), null], "Mật khẩu không khớp")
-      .required("Vui lòng xác nhận mật khẩu"),
+      .oneOf([Yup.ref("password"), null], "Passwords must match")
+      .required("Please confirm your password"),
   });
 
   return (
     <div style={{ maxWidth: "400px", margin: "0 auto", padding: "20px" }}>
-      <h2>Đăng Ký</h2>
       <Formik
         initialValues={{
-          name: "",
+          accountName: "",
           email: "",
           password: "",
           confirmPassword: "",
@@ -37,15 +35,15 @@ const SignupForm = (params) => {
         {({ isSubmitting }) => (
           <Form>
             <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="name">Họ và tên:</label>
+              <label htmlFor="name">Account Name:</label>
               <Field
                 type="text"
-                name="name"
-                id="name"
+                name="accountName"
+                id="accountName"
                 style={{ width: "100%", padding: "8px", marginTop: "5px" }}
               />
               <ErrorMessage
-                name="name"
+                name="accountName"
                 component="div"
                 style={{ color: "red", fontSize: "12px" }}
               />
@@ -67,7 +65,7 @@ const SignupForm = (params) => {
             </div>
 
             <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="password">Mật khẩu:</label>
+              <label htmlFor="password">Password:</label>
               <Field
                 type="password"
                 name="password"
@@ -82,7 +80,7 @@ const SignupForm = (params) => {
             </div>
 
             <div style={{ marginBottom: "10px" }}>
-              <label htmlFor="confirmPassword">Xác nhận mật khẩu:</label>
+              <label htmlFor="confirmPassword">Confirm Password:</label>
               <Field
                 type="password"
                 name="confirmPassword"
@@ -98,7 +96,6 @@ const SignupForm = (params) => {
 
             <button
               type="submit"
-              disabled={isSubmitting}
               style={{
                 padding: "10px 20px",
                 backgroundColor: "#28a745",
@@ -107,7 +104,7 @@ const SignupForm = (params) => {
                 cursor: "pointer",
               }}
             >
-              {isSubmitting ? "Đang xử lý..." : "Đăng Ký"}
+              {"Sign Up"}
             </button>
           </Form>
         )}

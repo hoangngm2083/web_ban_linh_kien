@@ -1,45 +1,72 @@
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { login as loginSlice } from "../redux/slices/userSlice";
+import api, { apiPath } from "../api";
+import {
+  login as loginSlice,
+  logout as logoutSlice,
+} from "../redux/slices/userSlice";
 
-const useAuth = () => {
+const useAuthServices = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const login = (data) => {
+  let res = null;
+  const login = async (data) => {
     try {
-      // const res = await api.post(apiPath.account.login, data).then((res) => res.json());
-      // handle ...
-      const user = {
-        id: 1,
-        email: data?.email,
-        accessToken: "123",
+      res = await api.post(apiPath.account.login, {
+        AccountName: data?.accountName,
+        Password: data?.password,
+      });
+      console.log(res);
+
+      localStorage.setItem("accessToken", res.data?.token);
+      const value = {
+        token: res.data?.token,
+        id: res.data?.data?.account.AccountID,
+        mail: res.data?.data?.account.Mail,
+        accountName: res.data?.data?.account.AccountName,
+        CIC: res.data?.data?.account.CIC,
       };
 
-      dispatch(loginSlice(user)); // Sử dụng dispatch trong hook
+      dispatch(loginSlice(value));
+
       navigate("/");
     } catch (e) {
-      alert(e?.message);
+      alert("Incorrect account or password!");
     }
   };
 
-  const register = (data) => {
+  const logout = () => {
+    // dispatch(resetCart());
+    // dispatch(resetCheckout());
+    dispatch(logoutSlice());
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
+
+  const register = async (data) => {
     try {
-      // const res = await api.post(apiPath.account.register, data).then((res) => res.json());
-      // handle ...
-      const user = {
-        id: 1,
-        email: data?.email,
-        accessToken: "123",
-      };
-      dispatch(loginSlice(user)); // Sử dụng dispatch trong hook
-      // useNavigate("/");
+      const res = await api.post(apiPath.account.register, {
+        AccountName: data.accountName,
+        Password: data.password,
+        PasswordConfirm: data.confirmPassword,
+        Mail: data.email,
+      });
+
+      localStorage.setItem("accessToken", res.data?.token);
+      dispatch(
+        loginSlice({
+          token: res.data?.token,
+          ...res.data?.data?.account,
+        })
+      );
+
+      navigate("/");
     } catch (e) {
-      alert(e?.message);
+      alert("Account name or email already exists");
     }
   };
 
-  return { login, register };
+  return { login, register, logout };
 };
 
-export default useAuth;
+export default useAuthServices;

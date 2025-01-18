@@ -1,13 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
+import { apiPath } from "../api";
 import apiPayment from "../api/apiPayment";
+import apiv2 from "../api/apiv2";
 import {
   addSelectedToCheckoutItems,
   getSelectedToCheckoutItems,
   getTotal,
   removeSelectedToCheckoutItem,
   resetCheckout,
+  setInvoice,
 } from "../redux/slices/checkoutSlice";
-import { getShippingInfor, setInfor } from "../redux/slices/userSlice";
+import { addShippingInfo, getShippingInfor } from "../redux/slices/userSlice";
 
 const useCheckoutServices = () => {
   const dispatch = useDispatch();
@@ -26,7 +29,7 @@ const useCheckoutServices = () => {
 
     getSelectedToCheckoutItems: () => useSelector(getSelectedToCheckoutItems),
 
-    reset: () => {
+    resetCheckout: () => {
       dispatch(reset());
     },
 
@@ -42,10 +45,19 @@ const useCheckoutServices = () => {
     },
 
     setShippingInfo: (shippingInfo) => {
-      dispatch(setInfor(shippingInfo));
+      dispatch(addShippingInfo(shippingInfo));
 
       // call post Api
       // post shippingInfo to backend
+    },
+    setInvoice: (invoice) => {
+      dispatch(setInvoice(invoice));
+    },
+
+    postInvoiceToDb: async (data) => {
+      const res = await apiv2.post(apiPath.checkout.postInvoice, data);
+
+      return res;
     },
 
     getPaymentUrl: ({ amount, type = "VNPay" }) => {

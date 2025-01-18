@@ -4,17 +4,11 @@ import { useNavigate } from "react-router-dom";
 import formatMoney from "../helpers/formatMoney";
 
 const ProductCard = ({ product, onAddToCart }) => {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-  // Tính toán phần trăm giảm giá
-  const discountPercentage =
-    product?.originalPrice && product?.price
-      ? Math.round(
-          ((product?.originalPrice - product?.price) / product?.originalPrice) *
-            100
-        )
-      : 0;
+
   const handleViewDetail = (product) => {
-    navigate("/products/" + product?.id);
+    navigate("/products/" + product?.productID);
   };
 
   return (
@@ -31,7 +25,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       }}
     >
       {/* Tag giảm giá */}
-      {discountPercentage > 0 && (
+      {!!product.sale && product.sale > 0 && (
         <div
           className="position-absolute"
           style={{
@@ -45,7 +39,7 @@ const ProductCard = ({ product, onAddToCart }) => {
             zIndex: 10,
           }}
         >
-          -{discountPercentage}%
+          -{product.sale}%
         </div>
       )}
 
@@ -58,8 +52,9 @@ const ProductCard = ({ product, onAddToCart }) => {
         }}
       >
         <img
-          src={product?.img}
-          alt={product?.name}
+          src={apiUrl + product?.image}
+          alt={product?.productName}
+          crossOrigin="anonymous"
           style={{
             width: "100%",
             height: "100%",
@@ -79,7 +74,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           fontWeight: "bold",
         }}
       >
-        {product?.name}
+        {product?.productName}
       </div>
 
       {/* Tầng 3: Giá sản phẩm */}
@@ -93,7 +88,7 @@ const ProductCard = ({ product, onAddToCart }) => {
           fontWeight: "bold",
         }}
       >
-        {product?.originalPrice && (
+        {!!product?.sale && product?.sale > 0 && (
           <span
             style={{
               textDecoration: "line-through",
@@ -101,10 +96,13 @@ const ProductCard = ({ product, onAddToCart }) => {
               marginRight: "10px",
             }}
           >
-            {formatMoney(product?.originalPrice)} VND
+            {formatMoney(product?.price)}
           </span>
         )}
-        <span className="text-primary">{formatMoney(product?.price)} VND</span>
+        <span className="text-primary">
+          {formatMoney(product?.price - (product?.price * product?.sale) / 100)}{" "}
+          VND
+        </span>
       </div>
 
       {/* Tầng 4: Nút Thêm vào giỏ hàng */}

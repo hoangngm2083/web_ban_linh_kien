@@ -3,11 +3,14 @@ import React from "react";
 const ProductDetail = React.lazy(
   () => import("../pages/product/ProductDetail")
 );
+const AllProduct = React.lazy(() => import("../pages/product/AllProducts"));
 const Thanks = React.lazy(() => import("../pages/site/Thanks"));
 const Checkout = React.lazy(() => import("../pages/checkout"));
 const Home = React.lazy(() => import("../pages/site/Home"));
 const Cart = React.lazy(() => import("../pages/cart"));
 const Login = React.lazy(() => import("../pages/account/Login"));
+const Invoice = React.lazy(() => import("../pages/account/Invoice"));
+const Profile = React.lazy(() => import("../pages/account/Profile"));
 const Register = React.lazy(() => import("../pages/account/Register"));
 const NotFound = React.lazy(() => import("../pages/utils/NotFound"));
 
@@ -20,6 +23,11 @@ const publicRoutes = {
   login: {
     path: "/auth/login",
     element: Login,
+    noNavbar: true,
+  },
+  profile: {
+    path: "/profile",
+    element: Profile,
     noNavbar: true,
   },
   register: {
@@ -62,6 +70,16 @@ const publicRoutes = {
   productDetail: {
     path: "/products/:id",
     element: ProductDetail,
+  },
+
+  products: {
+    path: "/products",
+    element: AllProduct,
+  },
+  invoices: {
+    path: "/account/invoices",
+    element: Invoice,
+    noNavbar: true,
   },
   notFound: {
     path: "*",
