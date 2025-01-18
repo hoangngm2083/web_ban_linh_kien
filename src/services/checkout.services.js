@@ -55,7 +55,7 @@ const useCheckoutServices = () => {
     },
 
     postInvoiceToDb: async (data) => {
-      const res = await apiv2.post(apiPath.checkout.postInvoice, data);
+      const res = await apiv2.post(apiPath.invoices.postInvoice, data);
 
       return res;
     },

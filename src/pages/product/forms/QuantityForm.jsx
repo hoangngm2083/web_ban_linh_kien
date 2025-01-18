@@ -5,6 +5,7 @@ const QuantityForm = ({
   handleIncrease,
   handleDecrease,
   initValue,
+  maxValue,
 }) => {
   return (
     <div className="d-inline float-start me-2">
@@ -22,6 +23,7 @@ const QuantityForm = ({
           ref={quantityRef}
           readOnly
           min="1"
+          max={maxValue}
           className="form-control "
           style={{ width: 55 + "px" }}
         />

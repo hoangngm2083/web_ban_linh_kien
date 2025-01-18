@@ -15,17 +15,54 @@ const Item = ({ item, setUpIsSelected }) => {
   const quantityRef = useRef();
   const { increase, decrease, removeItem } = useCartServices();
   const handleIncrease = () => {
+    if (Number(quantityRef.current?.value) >= item.quantity) {
+      alert("Maximum of product quantity");
+      return;
+    }
+
+    const quantityselected = Number(quantityRef.current?.value) + 1;
+
     increase({
+      isSelected: isSelected,
       index: item?.index,
-      quantitySelected: quantityRef.current?.value,
+      quantitySelected: quantityselected,
+      ...item,
     });
+
+    if (isSelected) {
+      removeSelectedToCheckoutItem({
+        ...item,
+        quantitySelected: quantityselected,
+      });
+
+      addSelectedToCheckoutItems({
+        ...item,
+        quantitySelected: quantityselected,
+      });
+    }
   };
 
   const handleDecrease = () => {
+    const quantityselected = Number(quantityRef.current?.value) - 1;
+
     decrease({
+      isSelected: isSelected,
       index: item?.index,
-      quantitySelected: quantityRef.current?.value,
+      quantitySelected: quantityselected,
+      ...item,
     });
+
+    if (isSelected) {
+      removeSelectedToCheckoutItem({
+        ...item,
+        quantitySelected: quantityselected,
+      });
+
+      addSelectedToCheckoutItems({
+        ...item,
+        quantitySelected: quantityselected,
+      });
+    }
   };
 
   const handleRemoveItem = () => {
@@ -72,7 +109,10 @@ const Item = ({ item, setUpIsSelected }) => {
           handleIncrease={handleIncrease}
           handleDecrease={handleDecrease}
           initValue={item?.quantitySelected}
+          maxValue={item.quantity}
         />
+
+        <p>sl: {item?.quantity}</p>
       </td>
       <td>
         <var className="price">
@@ -107,4 +147,4 @@ const Item = ({ item, setUpIsSelected }) => {
     </tr>
   );
 };
-export default React.memo(Item);
+export default Item;

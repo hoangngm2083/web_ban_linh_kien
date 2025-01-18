@@ -1,7 +1,11 @@
 import React from "react";
 import formatMoney from "../../../helpers/formatMoney";
+import useCheckoutServices from "../../../services/checkout.services";
 
-const TotalPriceCard = ({ items, total }) => {
+const TotalPriceCard = () => {
+  const { getTotal } = useCheckoutServices();
+  let total = getTotal();
+
   return (
     <div className="card">
       <div className="card-body">
@@ -34,4 +38,4 @@ const TotalPriceCard = ({ items, total }) => {
     </div>
   );
 };
-export default React.memo(TotalPriceCard);
+export default TotalPriceCard;

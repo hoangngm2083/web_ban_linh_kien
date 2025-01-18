@@ -2,13 +2,25 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import formatMoney from "../helpers/formatMoney";
+import useCheckoutServices from "../services/checkout.services";
 
 const ProductCard = ({ product, onAddToCart }) => {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const { addSelectedToCheckoutItems } = useCheckoutServices();
   const navigate = useNavigate();
 
   const handleViewDetail = (product) => {
     navigate("/products/" + product?.productID);
+  };
+
+  const handlePurchase = (product) => {
+    console.log(product);
+
+    addSelectedToCheckoutItems({
+      ...product,
+      quantitySelected: 1,
+    });
+    navigate("/checkout");
   };
 
   return (
@@ -105,6 +117,18 @@ const ProductCard = ({ product, onAddToCart }) => {
         </span>
       </div>
 
+      <div
+        className="p-2"
+        style={{
+          height: "15%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <span className="text-black">sl: {product?.quantity}</span>
+      </div>
+
       {/* Tầng 4: Nút Thêm vào giỏ hàng */}
       <div
         className="p-1"
@@ -126,7 +150,7 @@ const ProductCard = ({ product, onAddToCart }) => {
         >
           <p style={{ margin: "auto" }}>Add to cart</p>
         </Button>
-        <Button
+        {/* <Button
           variant="outline-primary"
           className="w-45 d-flex align-items-center justify-content-between"
           style={{
@@ -136,6 +160,18 @@ const ProductCard = ({ product, onAddToCart }) => {
           onClick={() => handleViewDetail(product)}
         >
           <p style={{ margin: "auto" }}>View Detail</p>
+        </Button> */}
+
+        <Button
+          variant="outline-primary"
+          className="w-45 d-flex align-items-center justify-content-between"
+          style={{
+            borderRadius: "1px",
+            transition: "all 0.3s ease",
+          }}
+          onClick={() => handlePurchase(product)}
+        >
+          <p style={{ margin: "auto" }}>Purchase</p>
         </Button>
       </div>
     </div>

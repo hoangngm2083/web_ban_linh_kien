@@ -63,8 +63,8 @@ const Thanks = () => {
       (async () => {
         const res = await postInvoiceToDb(invoice);
         console.log("res", res);
-        removeItems(ps);
-        resetCheckout();
+        // removeItems(ps);
+        // resetCheckout();
       })();
     }
   }, []);

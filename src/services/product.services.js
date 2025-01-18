@@ -13,6 +13,13 @@ const useProductServices = () => {
       return ps;
     },
 
+    getProductWithId: async (id) => {
+      const res = await api.get(apiPath.product.getAll + "/" + id);
+      const ps = res.data.data.product;
+
+      return ps;
+    },
+
     getProductsWithNameFromDb: async (name) => {
       const res = await api.get(apiPath.search.searchProducts, {
         params: {

@@ -18,8 +18,9 @@ export const apiPath = {
   search: {
     searchProducts: "search/products",
   },
-  checkout: {
+  invoices: {
     postInvoice: "invoices",
+    myInvoice: "invoices/myInvoices",
   },
 };
 

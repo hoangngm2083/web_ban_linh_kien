@@ -11,6 +11,12 @@ const userServices = {
 
     return pI.data.data.personalInfo;
   },
+
+  getMyInvoices: async () => {
+    const pI = await api.get(apiPath.invoices.myInvoice);
+
+    return pI.data?.data?.invoices;
+  },
 };
 
 export default userServices;

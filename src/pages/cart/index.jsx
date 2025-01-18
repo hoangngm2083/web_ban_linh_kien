@@ -6,10 +6,9 @@ import TotalPriceCard from "./components/TotalPriceCard";
 
 const Cart = () => {
   const { getCartItems } = useCartServices();
-  const { getSelectedToCheckoutItems, getTotal } = useCheckoutServices();
+  const { getSelectedToCheckoutItems } = useCheckoutServices();
   const items = getCartItems();
   const selectedItems = getSelectedToCheckoutItems();
-  let total = getTotal();
 
   return (
     <div>
@@ -25,10 +24,10 @@ const Cart = () => {
                   <thead className="text-muted">
                     <tr className="small text-uppercase">
                       <th scope="col">Product</th>
-                      <th scope="col" width={150}>
+                      <th scope="col" width={200}>
                         Quantity
                       </th>
-                      <th scope="col" width={150}>
+                      <th scope="col" width={120}>
                         Price
                       </th>
                       <th scope="col" className="text-end" width={130}></th>
@@ -66,7 +65,8 @@ const Cart = () => {
             </div>
           </div>
           <div className="col-md-3">
-            <TotalPriceCard items={selectedItems} total={total} />
+            {/* <TotalPriceCard items={selectedItems} total={total} /> */}
+            <TotalPriceCard />
           </div>
         </div>
       </div>
